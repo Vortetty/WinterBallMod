@@ -1,0 +1,50 @@
+{
+  "name" : "distortionsphere",
+  "type" : "head",
+
+  "scripts" : ["winterBall.lua"],
+  "animator" : "distortionsphere.animation",
+ 
+  "description" : "Turn into a sphere that can fit into smaller places! ^green;[F]",
+  "shortDescription" : "Distortion Sphere",
+  "rarity" : "Uncommon",
+  "icon" : "/tech/distortionsphere.png",
+
+  "chipCost" : 0,
+
+  "animationParts" : {
+    "ballGlow" : "distortionsphereglow.png",
+    "ball" : "distortionsphere.png"
+  },
+
+  "transformedMovementParameters" : {
+    "collisionPoly" : [ [-0.425, -0.225], [-0.225, -0.425], [0.225, -0.425], [0.425, -0.225], [0.425, 0.225], [0.225, 0.425], [-0.225, 0.425], [-0.425, 0.225] ],
+
+    "groundForce" : 450.0,
+    "normalGroundFriction" : 1.5,
+    "ambulatingGroundFriction" : 0.2,
+    "slopeSlidingFactor" : 3.0,
+
+    "airJumpProfile" : {
+      "jumpSpeed" : 24,
+      "jumpControlForce" : 800.0,
+      "jumpInitialPercentage" : 1.0,
+      "jumpHoldTime" : 0.1
+    },
+
+    "liquidJumpProfile" : {
+      "jumpSpeed" : 0.0,
+      "jumpControlForce" : 0.0,
+
+      "multiJump" : false,
+      "autoJump" : false
+    }
+  },
+
+  "ballSpeed" : 40,
+
+  "energyCost" : 0,
+
+  "ballRadius" : 0.5,
+  "ballFrames" : 16
+}
