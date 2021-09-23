@@ -130,6 +130,45 @@ function init()
     end
 end
 
+function loadConfigJson() -- Loads the config.json file
+    self.ballConfigJson = root.assetJson("/tech/distortionsphere/config.jsonc")
+    self.ballFrames = self.ballConfigJson["drawables"]
+    self.ballScale = self.ballConfigJson["scale"] or 1
+    self.ballRadius = self.ballScale/2
+    self.ballFrameCount = self.ballConfigJson["frameCount"]
+    self.allowInterractWhileInBall = self.ballConfigJson["allowInterract"]
+    self.animationSpeedDivisor = self.ballConfigJson["animationSpeedDivisor"] or 1
+end
+
+function initCommonParameters()
+    self.angularVelocity = 0
+    self.active = false -- Sphere state active
+    self.angle = 0
+    self.transformFadeTimer = 0
+
+    self.energyCost = config.getParameter("energyCost")
+    --self.ballFrames = config.getParameter("ballFrames")
+    self.ballSpeed = config.getParameter("ballSpeed")
+
+    loadConfigJson()
+
+    self.transformFadeTime = config.getParameter("transformFadeTime", 0.3)
+    self.transformedMovementParameters = config.getParameter("transformedMovementParameters")
+    self.transformedMovementParameters.runSpeed = self.ballSpeed
+    self.transformedMovementParameters.walkSpeed = self.ballSpeed
+    self.transformedMovementParameters.collisionPoly = { 
+        {-0.425*self.ballScale, -0.225*self.ballScale}, 
+        {-0.225*self.ballScale, -0.425*self.ballScale}, 
+        {0.225*self.ballScale, -0.425*self.ballScale}, 
+        {0.425*self.ballScale, -0.225*self.ballScale}, 
+        {0.425*self.ballScale, 0.225*self.ballScale}, 
+        {0.225*self.ballScale, 0.425*self.ballScale}, 
+        {-0.225*self.ballScale, 0.425*self.ballScale}, 
+        {-0.425*self.ballScale, 0.225*self.ballScale} 
+    }
+    self.basePoly = mcontroller.baseParameters().standingPoly
+end
+
 
 
 function attemptActivation()
@@ -182,44 +221,12 @@ function updateAngularVelocity(dt)
         -- If we are on the ground, assume we are rolling without slipping to
         -- determine the angular velocity
         local positionDiff = world.distance(self.lastPosition or mcontroller.position(), mcontroller.position())
-        self.angularVelocity = -vec2.mag(positionDiff) / dt / self.ballRadius
+        self.angularVelocity = -(vec2.mag(positionDiff)/vec2.mag({self.animationSpeedDivisor, self.animationSpeedDivisor})) / dt / self.ballRadius
 
         if positionDiff[1] > 0 then
             self.angularVelocity = -self.angularVelocity
         end
     end
-end
-
-function initCommonParameters()
-    self.angularVelocity = 0
-    self.active = false -- Sphere state active
-    self.angle = 0
-    self.transformFadeTimer = 0
-
-    self.energyCost = config.getParameter("energyCost")
-    --self.ballFrames = config.getParameter("ballFrames")
-    self.ballSpeed = config.getParameter("ballSpeed")
-    self.ballConfigJson = root.assetJson("/tech/distortionsphere/config.jsonc")
-    self.ballFrames = self.ballConfigJson["drawables"]
-    self.ballScale = self.ballConfigJson["scale"]
-    self.ballRadius = self.ballScale/2
-    self.ballFrameCount = self.ballConfigJson["frameCount"]
-    self.allowInterractWhileInBall = self.ballConfigJson["allowInterract"]
-    self.transformFadeTime = config.getParameter("transformFadeTime", 0.3)
-    self.transformedMovementParameters = config.getParameter("transformedMovementParameters")
-    self.transformedMovementParameters.runSpeed = self.ballSpeed
-    self.transformedMovementParameters.walkSpeed = self.ballSpeed
-    self.transformedMovementParameters.collisionPoly = { 
-        {-0.425*self.ballScale, -0.225*self.ballScale}, 
-        {-0.225*self.ballScale, -0.425*self.ballScale}, 
-        {0.225*self.ballScale, -0.425*self.ballScale}, 
-        {0.425*self.ballScale, -0.225*self.ballScale}, 
-        {0.425*self.ballScale, 0.225*self.ballScale}, 
-        {0.225*self.ballScale, 0.425*self.ballScale}, 
-        {-0.225*self.ballScale, 0.425*self.ballScale}, 
-        {-0.425*self.ballScale, 0.225*self.ballScale} 
-    }
-    self.basePoly = mcontroller.baseParameters().standingPoly
 end
 
 function uninit()

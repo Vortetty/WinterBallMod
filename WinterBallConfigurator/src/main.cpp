@@ -1,3 +1,13 @@
+
+#ifdef _WIN32
+#pragma comment(lib, "winmm.lib")
+#pragma warning( push, 0 )
+#pragma warning( disable : 4576 )
+#pragma warning( disable : 2290 )
+//#include "hideConsole.hpp"
+//bool consoleHidden = hideConsole();
+#endif
+
 #define RAYGUI_IMPLEMENTATION
 #define RAYGUI_SUPPORT_RICONS
 #define GUI_TEXTBOX_EXTENDED_IMPLEMENTATION
@@ -18,6 +28,7 @@
 #include "raygui.h"
 #include "gui_textbox_extended.h"
 #undef RAYGUI_IMPLEMENTATION
+
 typedef Vector2 Vec2;
 
 #include "json.hpp"
@@ -36,6 +47,18 @@ using json = nlohmann::json;
 #include <chrono>
 #include "drawableHelper.hpp"
 namespace fs = std::filesystem;
+
+#ifdef _WIN32
+typedef fs::filesystem_error fs_error;
+
+void busy_wait_nop() {
+}
+#else
+typedef fs::__cxx11::filesystem_error fs_error;
+void busy_wait_nop() {
+    asm(" ");
+}
+#endif
 
 #define fitToRange(x, min, max) (x < min ? min : (x > max ? max : x))
 
@@ -63,17 +86,29 @@ struct drawableListEntry {
     bool beingEdited = false;
 };
 
+char* get_homedir(void) {
+    char homedir[512];
+#ifdef _WIN32
+    snprintf(homedir, 512, "%s%s", getenv("HOMEDRIVE"), getenv("HOMEPATH"));
+#else
+    snprintf(homedir, 512, "%s", getenv("HOME"));
+#endif
+    return strdup(homedir);
+}
+
 void openChoosePathGui(char const *title, char const *acceptableFiletypes[], int fileTypesCount, char const *fileTypeComment, char path[512]) {
     std::string fp;
 
     if (!std::filesystem::exists(path)) {
-        fp = "";
+        fp = get_homedir();
     } else if (std::filesystem::is_directory(path)) {
         fp = path;
     } else {
         std::filesystem::path p = std::filesystem::path(path);
         fp = p.string();
     }
+
+    std::cout << "Opening gui in " << fp << std::endl;
 
     char const *fFile = tinyfd_openFileDialog( // there is also a wchar_t version
         title, // title
@@ -89,13 +124,24 @@ void openChoosePathGui(char const *title, char const *acceptableFiletypes[], int
 
     return;
 }
+void callChoosePathGui(char const* title, char const* acceptableFiletypes[], int fileTypesCount, char const* fileTypeComment, char path[512]) {
+#ifdef _WIN32
+    openChoosePathGui(title, acceptableFiletypes, fileTypesCount, fileTypeComment, path);
+#else
+    std::thread t(openChoosePathGui, title, acceptableFiletypes, fileTypesCount, fileTypeComment, path);
+    while (!t.joinable()) busy_wait_nop();
+    t.join();
+#endif
+}
 
 void openSaveGui(char const *title, const char userHomePath[512], std::promise<std::string> &&promise) {
     char const * validFiles[] = { "*.jsonc" };
 
+    std::cout << "Opening gui in " << userHomePath << std::endl;
+
     char const *fFile = tinyfd_saveFileDialog( // there is also a wchar_t version
         title, // title
-        (fs::path(userHomePath)/"config.jsonc").c_str(), // optional initial directory
+        (const char*)(fs::path(userHomePath)/"config.jsonc").c_str(), // optional initial directory
         1, // number of filter patterns
         validFiles, // char const * lFilterPatterns[2] = { "*.txt", "*.jpg" };
         "WinterBall tech config" // optional filter description
@@ -139,7 +185,7 @@ inline void addComboBox(Vec2 pos, char const *label, char *description, const ch
     optionNumber = GuiComboBox({pos.x, pos.y+10, 125, 20}, items, optionNumber);
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     InitWindow(800, 600, "WinterBall Tech Config Generator");
 
     GuiLoadStyle("assets/dark+pink.rgs");
@@ -196,7 +242,7 @@ int main() {
                 //
                 // Frame count
                 // 
-                    addSpinner({5, 5}, "Animation frame Count:", "How many frames are in the animation", frameCount, frameCountBuf, 1, frameMax, frameCountEditEnabled);
+                    addSpinner({5, 5}, "Animation frame Count:", (char*)"How many frames are in the animation", frameCount, frameCountBuf, 1, frameMax, frameCountEditEnabled);
                     if(!frameCountEditEnabled && frameCount > 0) {
                         frameScrollerContentRec.height = frameScrollerRec.height + (frameCount * 76 - (frameScrollerRec.height - 5));
                         drawableList.resize(frameCount);
@@ -205,22 +251,22 @@ int main() {
                 //
                 // Ball scale
                 //
-                    addSpinner({5, 40}, "Ball scale:", "Ball diameter in blocks", ballScale, ballScaleBuf, 1, scaleMax, ballScaleEditEnabled);
+                    addSpinner({5, 40}, "Ball scale:", (char*)"Ball diameter in blocks", ballScale, ballScaleBuf, 1, scaleMax, ballScaleEditEnabled);
 
                 //
                 // Block interractons
                 //
-                    addCheckbox({5, 75}, "Allow interractions:", "If enabled, allows you to interact with things while in ball mode", allowInterract);
+                    addCheckbox({5, 75}, "Allow interractions:", (char*)"If enabled, allows you to interact with things while in ball mode", allowInterract);
 
                 //
                 // Animation speed divisor
                 //
-                    addSpinner({5, 110}, "Anim speed divisor:", "Higher values make the speed of the animation slower", animSpeedDivisor, animSpeedDivisorBuf, 1, animSpeedDivisorMax, animSpeedDivisorEditEnabled);
+                    addSpinner({5, 110}, "Anim speed divisor:", (char*)"Higher values make the speed of the animation slower", animSpeedDivisor, animSpeedDivisorBuf, 1, animSpeedDivisorMax, animSpeedDivisorEditEnabled);
 
                 //
                 // Select image scale method
                 //
-                    addComboBox({5, 145}, "Scaling method:", "Scaling method used to resize images for frames to  the proper size (if required)", "Bicubic;Nearest", scaleMethodSelection);
+                    addComboBox({5, 145}, "Scaling method:", (char*)"Scaling method used to resize images for frames to  the proper size (if required)", "Bicubic;Nearest", scaleMethodSelection);
 
                 //
                 // Save button
@@ -242,9 +288,7 @@ int main() {
                 //
                     if (GuiButton({445, 575, 350, 20}, GuiIconText(RICON_FILE_OPEN, "Load frames from gif"))) {
                         char path[512];
-                        std::thread t(openChoosePathGui, TextFormat("Select image to load frames from"), acceptableAnimFiletypes, 2, "GIF Files", path);
-                        while (!t.joinable()) asm(" ");
-                        t.join();
+                        callChoosePathGui(TextFormat("Select image to load frames from"), acceptableAnimFiletypes, 2, "GIF Files", path);
 
                         if (std::filesystem::exists(path) && !std::filesystem::is_directory(path)) {
                             std::cout << "Loading GIF from " << path << std::endl;
@@ -299,13 +343,11 @@ int main() {
                                 } else {
                                     GuiLabel({450, i * 76 + 9 + frameScrollerPos.y, 300, 10}, TextFormat("Frame %d image path:", i+1));
                                 }
-                            } catch (std::filesystem::__cxx11::filesystem_error &e) {
+                            } catch (fs_error &e) {
                                 GuiLabel({450, i * 76 + 9 + frameScrollerPos.y, 300, 10}, TextFormat("Frame %d image path:", i+1));
                             }
                             if (GuiButton({450, i * 76 + 20 + frameScrollerPos.y, 20, 60}, GuiIconText(RICON_FILE_OPEN, ""))) {
-                                std::thread t(openChoosePathGui, TextFormat("Select image for frame %d", i+1), acceptableFiletypes, 26, "Image files", drawableList[i].path);
-                                while (!t.joinable()) asm(" ");
-                                t.join();
+                                callChoosePathGui(TextFormat("Select image for frame %d", i+1), acceptableFiletypes, 26, "Image files", drawableList[i].path);
                             }
                             // I disabled the extended text box because it's not working properly
                             //if (GuiTextBoxEx({475, i * 76 + 20 + frameScrollerPos.y, 290, 30}, drawableList[i].path, 512, drawableList[i].beingEdited)) 
@@ -334,9 +376,13 @@ int main() {
 
                     std::promise<std::string> pathPromise;
                     auto pathPromiseFuture = pathPromise.get_future();
+#ifdef _WIN32
+                    openSaveGui("Save configuration file", get_homedir(), std::move(pathPromise));
+#else
                     std::thread t(openSaveGui, "Save configuration file", ".", std::move(pathPromise));
-                    while (!t.joinable()) asm(" ");
+                    while (!t.joinable()) busy_wait_nop();
                     t.join();
+#endif
                     std::string path;
                     try { path = pathPromiseFuture.get(); }
                     catch (std::future_error &e) { path = "NULL"; }
@@ -371,3 +417,7 @@ int main() {
 
     return 0;
 }
+
+#ifdef _WIN32
+#pragma warning( pop, 0 )
+#endif

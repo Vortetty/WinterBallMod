@@ -1,0 +1,26 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "26f8fb08-9d83-4f3b-9609-1d1f5078a786": {
+      "ProjectGuid": "26f8fb08-9d83-4f3b-9609-1d1f5078a786",
+      "DisplayName": "Winterball Configuration Generator",
+      "ColorIndex": 0
+    },
+    "f5c4aff9-9c01-4160-9e51-a5b30c9ec2d0": {
+      "ProjectGuid": "f5c4aff9-9c01-4160-9e51-a5b30c9ec2d0",
+      "DisplayName": "Solution Items",
+      "ColorIndex": 1
+    },
+    "e89d61ac-55de-4482-afd4-df7242ebc859": {
+      "ProjectGuid": "e89d61ac-55de-4482-afd4-df7242ebc859",
+      "DisplayName": "raylib",
+      "ColorIndex": 2
+    }
+  },
+  "NextColorIndex": 3
+}
