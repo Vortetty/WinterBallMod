@@ -11,7 +11,7 @@ Supported platforms:
   - To compile then run, run `make test`
   - To compile then run in gdb, run `make gdb`
   - To compile then run the latest build, run `make run`
-  - If your installation of clang supports polly, you can use `make <command> polly=true` to enable it's optimizations while building
+  - If your installation of clang supports polly(if you didn't explicitly compile clang with it, it probably doesn't), you can use `make <command> polly=true` to enable it's optimizations while building
   - The current libraylib.a is x86, i will add an arm version when i get my pi working
 - Windows using Visual studio (all architectures with VS support)
   - Simple, just open the .sln and click build
