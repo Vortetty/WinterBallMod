@@ -1,30 +1,3 @@
-#version 330
-
-// Input vertex attributes (from vertex shader)
-in vec3 fragPosition;
-
-// Input uniform values
-uniform samplerCube environmentMap;
-uniform bool vflipped;
-uniform bool doGamma;
-
-// Output fragment color
-out vec4 finalColor;
-
-void main()
-{
-    // Fetch color from texture map
-    vec3 color = vec3(0.0);
-
-    if (vflipped) color = texture(environmentMap, vec3(fragPosition.x, -fragPosition.y, fragPosition.z)).rgb;
-    else color = texture(environmentMap, fragPosition).rgb;
-
-    if (doGamma)// Apply gamma correction
-    { 
-        color = color/(color + vec3(1.0));
-        color = pow(color, vec3(1.0/2.2));
-    }
-
-    // Calculate final fragment color
-    finalColor = vec4(color, 1.0);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:f41bf5ddecad8c8df348240a21699226b36d3cb17aa7c747fb31c0ee8cc3178a
+size 705

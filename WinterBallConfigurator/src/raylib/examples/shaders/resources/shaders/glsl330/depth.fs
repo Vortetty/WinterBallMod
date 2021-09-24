@@ -1,27 +1,3 @@
-#version 330
-
-// Input vertex attributes (from vertex shader)
-in vec2 fragTexCoord;
-in vec4 fragColor;
-
-// Input uniform values
-uniform sampler2D texture0;     // Depth texture
-uniform vec4 colDiffuse;
-
-// Output fragment color
-out vec4 finalColor;
-
-// NOTE: Add here your custom variables
-
-void main()
-{
-    float zNear = 0.01; // camera z near
-    float zFar = 10.0;  // camera z far
-    float z = texture(texture0, fragTexCoord).x;
-
-    // Linearize depth value
-    float depth = (2.0*zNear)/(zFar + zNear - z*(zFar - zNear));
-    
-    // Calculate final fragment color
-    finalColor = vec4(depth, depth, depth, 1.0f);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6a88795a5ff1e9f56b912a14ae7dbb06fcc9d1315673f93f2a879a83ce666449
+size 624

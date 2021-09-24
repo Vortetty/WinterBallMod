@@ -1,26 +1,3 @@
-#version 100
-
-precision mediump float;
-
-// Input vertex attributes (from vertex shader)
-varying vec2 fragTexCoord;
-varying vec4 fragColor;
-
-// Input uniform values
-uniform sampler2D texture0;
-uniform sampler2D texture1;
-uniform vec4 colDiffuse;
-
-uniform float divider;
-
-void main()
-{
-    // Texel color fetching from texture sampler
-    vec4 texelColor0 = texture2D(texture0, fragTexCoord);
-    vec4 texelColor1 = texture2D(texture1, fragTexCoord);
-    
-    float x = fract(fragTexCoord.s);
-    float final = smoothstep(divider - 0.1, divider + 0.1, x);
-    
-    gl_FragColor = mix(texelColor0, texelColor1, final);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:fee5c1152071889dffb06017c69c8269de953fd6d1a5be9f7ab1f438852a25a5
+size 618

@@ -1,11 +1,3 @@
-macro(populate_config_variables_locally target)
-  get_property(raylib_INCLUDE_DIRS TARGET ${target} PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
-  #get_property(raylib_LIBRARIES    TARGET ${target} PROPERTY LOCATION) # only works for SHARED
-  get_property(raylib_LDFLAGS      TARGET ${target} PROPERTY INTERFACE_LINK_LIBRARIES)
-  get_property(raylib_DEFINITIONS  TARGET ${target} PROPERTY DEFINITIONS)
-
-  set(raylib_INCLUDE_DIRS "${raylib_INCLUDE_DIRS}" PARENT_SCOPE)
-  #set(raylib_LIBRARIES   "${raylib_INCLUDE_DIRS}" PARENT_SCOPE)
-  set(raylib_LDFLAGS      "${raylib_LDFLAGS}" PARENT_SCOPE)
-  set(raylib_DEFINITIONS  "${raylib_DEFINITIONS}" PARENT_SCOPE)
-endmacro()
+version https://git-lfs.github.com/spec/v1
+oid sha256:a518db55ec16853a84c90217ed160c020c7f8d35b7e9801d1785fc59339620d6
+size 663

@@ -1,16 +1,3 @@
-#version 100
-
-precision mediump float;
-
-// Input uniform values
-uniform vec4 color;
-
-// NOTE: Add here your custom variables
-
-void main()
-{
-    // Each point is drawn as a screen space square of gl_PointSize size. gl_PointCoord contains where we are inside of
-    // it. (0, 0) is the top left, (1, 1) the bottom right corner.
-    // Draw each point as a colored circle with alpha 1.0 in the center and 0.0 at the outer edges.
-    gl_FragColor = vec4(color.rgb, color.a * (1.0 - length(gl_PointCoord.xy - vec2(0.5))*2.0));
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:2968fa8ae612ef219a94a0e1991bad6f69f6c1f66a8f839d89c4f57d51672611
+size 524

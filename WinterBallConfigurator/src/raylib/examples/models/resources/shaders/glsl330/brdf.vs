@@ -1,17 +1,3 @@
-#version 330
-
-// Input vertex attributes
-in vec3 vertexPosition;
-in vec2 vertexTexCoord;
-
-// Output vertex attributes (to fragment shader)
-out vec2 fragTexCoord;
-
-void main()
-{
-    // Calculate fragment position based on model transformations
-    fragTexCoord = vertexTexCoord;
-
-    // Calculate final vertex position
-    gl_Position = vec4(vertexPosition, 1.0);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:04c5e729b564cb4db79ca052ff44fd99fd754f573bdfb945cdffddef32252f5a
+size 364

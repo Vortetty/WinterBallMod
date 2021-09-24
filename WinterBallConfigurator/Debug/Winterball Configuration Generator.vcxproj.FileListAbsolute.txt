@@ -1,1 +1,3 @@
-D:\WinterBallMod\WinterBallConfigurator\Debug\Winterball Configuration Generator.exe
+version https://git-lfs.github.com/spec/v1
+oid sha256:da2958da277d1965c5a77ed25f32bc707e46862ba8286bfb5fc1a2a85795cdf3
+size 86

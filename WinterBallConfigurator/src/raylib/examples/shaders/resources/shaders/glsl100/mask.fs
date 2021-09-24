@@ -1,24 +1,3 @@
-#version 100
-
-precision mediump float;
-
-// Input vertex attributes (from vertex shader)
-varying vec2 fragTexCoord;
-varying vec4 fragColor;
-
-// Input uniform values
-uniform sampler2D texture0;
-uniform sampler2D mask;
-uniform vec4 colDiffuse;
-uniform int frame;
-
-// NOTE: Add here your custom variables
-
-void main()
-{
-    vec4 maskColour = texture2D(mask, fragTexCoord + vec2(sin(-float(frame)/150.0)/10.0, cos(-float(frame)/170.0)/10.0));
-    if (maskColour.r < 0.25) discard;
-    vec4 texelColor = texture2D(texture0, fragTexCoord + vec2(sin(float(frame)/90.0)/8.0, cos(float(frame)/60.0)/8.0));
-
-    gl_FragColor = texelColor*maskColour;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:9eb73fef1a5a28e216cff05801ea02e2435f5e5e47261f0e281bb602db409f19
+size 641

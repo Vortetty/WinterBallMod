@@ -1,20 +1,3 @@
-#version 100
-
-// Input vertex attributes
-attribute vec3 vertexPosition;
-
-// Input uniform values
-uniform mat4 matProjection;
-uniform mat4 matView;
-
-// Output vertex attributes (to fragment shader)
-varying vec3 fragPosition;
-
-void main()
-{
-    // Calculate fragment position based on model transformations
-    fragPosition = vertexPosition;
-
-    // Calculate final vertex position
-    gl_Position = matProjection*matView*vec4(vertexPosition, 1.0);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:366ea68d8d4329a275d99c4baf2ecd8a1e60b365fdd2ae97af391ed43cc7763c
+size 449

@@ -1,26 +1,3 @@
-#version 100
-
-// Input vertex attributes
-attribute vec3 vertexPosition;
-attribute vec2 vertexTexCoord;
-attribute vec3 vertexNormal;
-attribute vec4 vertexColor;
-
-// Input uniform values
-uniform mat4 mvp;
-
-// Output vertex attributes (to fragment shader)
-varying vec2 fragTexCoord;
-varying vec4 fragColor;
-
-// NOTE: Add here your custom variables 
-
-void main()
-{
-    // Send vertex attributes to fragment shader
-    fragTexCoord = vertexTexCoord;
-    fragColor = vertexColor;
-    
-    // Calculate final vertex position
-    gl_Position = mvp*vec4(vertexPosition, 1.0);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:af4fa55cc4082c754aafdea4f0a4984e59252cb60f5e336c544031a5d048187c
+size 568
