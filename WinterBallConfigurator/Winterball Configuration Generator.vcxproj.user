@@ -1,3 +1,6 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:7502faf26979fc3ee106ca7ab072f9b1666cf912f348482ad7ba7a1bc0b64a16
-size 226
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ShowAllFiles>false</ShowAllFiles>
+  </PropertyGroup>
+</Project>

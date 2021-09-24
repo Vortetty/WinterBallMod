@@ -1,3 +1,8 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:6fcad84f1cf62c0c6abe04f8ebd5467df93f99219358bec595f9b149eff6ec4f
-size 304
+# These are supported funding model platforms
+
+github: raysan5
+patreon: # raylib
+open_collective: # Replace with a single Open Collective username
+ko_fi: # raysan
+tidelift: # Replace with a single Tidelift platform-name/package-name e.g., npm/babel
+custom: # Replace with a single custom sponsorship URL

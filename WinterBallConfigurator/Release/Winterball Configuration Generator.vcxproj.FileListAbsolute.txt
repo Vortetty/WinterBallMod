@@ -1,3 +1,2 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:d727e326a2bd81ea1418c3c1967f37a7a30b4ef2bc48dd4a4baec32686b6ba33
-size 178
+D:\WinterBallMod\WinterBallConfigurator\Release\Winterball Configuration Generator.exe
+C:\Users\vorte\mod\WinterBallConfigurator\Release\Winterball Configuration Generator.exe

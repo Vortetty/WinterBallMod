@@ -1,3 +1,26 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:cc9e1f53fc1d96d5ba93b042d351ba4c086b70f50f28ddc7fa12da9f82ea0622
-size 617
+#version 100
+
+precision mediump float;
+
+// Input vertex attributes (from vertex shader)
+varying vec2 fragTexCoord;
+varying vec4 fragColor;
+
+// Input uniform values
+uniform sampler2D texture0;     // Depth texture
+uniform vec4 colDiffuse;
+
+// NOTE: Add here your custom variables
+
+void main()
+{
+    float zNear = 0.01; // camera z near
+    float zFar = 10.0;  // camera z far
+    float z = texture2D(texture0, fragTexCoord).x;
+
+    // Linearize depth value
+    float depth = (2.0*zNear)/(zFar + zNear - z*(zFar - zNear));
+    
+    // Calculate final fragment color
+    gl_FragColor = vec4(depth, depth, depth, 1.0f);
+}

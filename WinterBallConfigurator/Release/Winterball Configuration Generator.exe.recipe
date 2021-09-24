@@ -1,3 +1,11 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:db9148b4f6ba7426d97a76790c3491de1eeab1788b4c35aed5fdf3f468fb6d46
-size 331
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Users\vorte\mod\WinterBallConfigurator\Release\Winterball Configuration Generator.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

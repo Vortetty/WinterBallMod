@@ -1,3 +1,14 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:09c86b7ea8221c621c65a14e40cdd25f6f3c2122f95b212bf594de9ace661219
-size 386
+//{{NO_DEPENDENCIES}}
+// Microsoft Visual C++ generated include file.
+// Used by raylib.rc
+
+// Next default values for new objects
+// 
+#ifdef APSTUDIO_INVOKED
+#ifndef APSTUDIO_READONLY_SYMBOLS
+#define _APS_NEXT_RESOURCE_VALUE        101
+#define _APS_NEXT_COMMAND_VALUE         40001
+#define _APS_NEXT_CONTROL_VALUE         1001
+#define _APS_NEXT_SYMED_VALUE           101
+#endif
+#endif

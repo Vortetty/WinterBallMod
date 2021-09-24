@@ -1,3 +1,26 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:95bcbb39904fbdc83e06c06f20a2db0945eddbc97ee37c07b04c36e91bd56f9a
-size 469
+name: Windows Examples
+
+on:
+  push:
+  pull_request:
+    branches: [ master ]
+    paths:
+    - 'examples/**'
+    
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Build Library (MSVC16)
+      run: |
+        cd projects/VS2019
+        msbuild.exe raylib.sln /property:Configuration=Release /property:Platform=x86
+        cd ../..
+      shell: cmd
+

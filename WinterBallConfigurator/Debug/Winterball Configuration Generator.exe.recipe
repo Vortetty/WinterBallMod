@@ -1,3 +1,11 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:964c24e5f41c4d483e1b497cfb0020c51e75c9c62d3794bb5bfb8f20582d62b6
-size 327
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>D:\WinterBallMod\WinterBallConfigurator\Debug\Winterball Configuration Generator.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

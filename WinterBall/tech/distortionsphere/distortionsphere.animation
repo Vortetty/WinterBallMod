@@ -1,3 +1,98 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:c612f04c4d5c80c85f636e4db7b059c741ac082db029ee038189dc4d4e5e613b
-size 2319
+{
+  "globalTagDefaults" : {
+    "rotationFrame" : "0",
+    "ballDirectives" : ""
+  },
+
+  "animatedParts" : {
+    "stateTypes" : {
+      "ballState" : {
+        "default" : "off",
+        "states" : {
+          "deactivate" : {
+            "frames" : 3,
+            "cycle" : 0.12,
+            "mode" : "transition",
+            "transition" : "off"
+          },
+          "off" : { },
+          "activate" : {
+            "frames" : 3,
+            "cycle" : 0.12,
+            "mode" : "transition",
+            "transition" : "on"
+          },
+          "on" : { }
+        }
+      }
+    },
+
+    "parts" : {
+      "ballGlow" : {
+        "properties" : {
+          "transformationGroups" : [ "ball" ],
+          "centered" : true
+        },
+        "partStates" : {
+          "ballState" : {
+            "on" : {
+              "properties" : {
+                "zLevel" : 1,
+                "fullbright" : true,
+                "image" : "<partImage>:<rotationFrame><ballDirectives>?multiply=ffffff00"
+              }
+            }
+          }
+        }
+      },
+      "ball" : {
+        "properties" : {
+          "transformationGroups" : [ "ball" ],
+          "centered" : true
+        },
+        "partStates" : {
+          "ballState" : {
+            "deactivate" : {
+              "properties" : {
+                "offset" : [0, 0],
+                "fullbright" : true,
+                "image" : "transform.png:deactivate.<frame>"
+              }
+            },
+            "activate" : {
+              "properties" : {
+                "offset" : [0, 1.5],
+                "fullbright" : true,
+                "image" : "transform.png:activate.<frame>"
+              }
+            },
+            "on" : {
+              "properties" : {
+                "image" : "<partImage>?multiply=ffffff00<ballDirectives>"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "transformationGroups" : {
+    "ball" : { "interpolated" : true }
+  },
+
+  "particleEmitters" : {
+    "activateParticles" : {
+      "particles" : [ ]
+    },
+    "deactivateParticles" : {
+      "particles" : [ ]
+    }
+  },
+
+  "sounds" : {
+    "activate" : [ "/sfx/tech/tech_sphere_transform.ogg" ],
+    "deactivate" : [ "/sfx/tech/tech_sphere_transform.ogg" ],
+    "forceDeactivate" : [ "/sfx/tech/tech_sonicsphere_charge1.ogg" ]
+  }
+}

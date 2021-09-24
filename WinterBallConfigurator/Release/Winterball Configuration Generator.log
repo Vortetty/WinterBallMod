@@ -1,3 +1,9 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e6af9af650cf7e0ba62006a131f6e802d60e7ab64c386209e07922cd5a28766e
-size 1150
+﻿  theme.cpp
+C:\Users\vorte\mod\WinterBallConfigurator\include\raygui.h(182,9): warning C4068: unknown pragma 'clang'
+C:\Users\vorte\mod\WinterBallConfigurator\include\raygui.h(183,9): warning C4068: unknown pragma 'clang'
+C:\Users\vorte\mod\WinterBallConfigurator\include\raygui.h(184,9): warning C4068: unknown pragma 'clang'
+C:\Users\vorte\mod\WinterBallConfigurator\include\raygui.h(4426,9): warning C4068: unknown pragma 'clang'
+C:\Users\vorte\mod\WinterBallConfigurator\src\theme.cpp(32,64): warning C4996: 'tmpnam': This function or variable may be unsafe. Consider using tmpnam_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\vorte\mod\WinterBallConfigurator\src\theme.cpp(34,12): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/OPT:ICF' specification
+  Winterball Configuration Generator.vcxproj -> C:\Users\vorte\mod\WinterBallConfigurator\Release\Winterball Configuration Generator.exe

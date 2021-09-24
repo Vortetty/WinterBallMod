@@ -1,3 +1,4 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:52ee15205f2826184f81698f912d0beb2383a6d85fce726f9f6ac18862a1d483
-size 346
+| resource      | author      | licence | notes |
+| :------------ | :---------: | :------ | :---- |
+| ps3.png       | [@raysan5](https://github.com/raysan5) | [CC0](https://creativecommons.org/publicdomain/zero/1.0/) | - |
+| xbox.png      | [@raysan5](https://github.com/raysan5) | [CC0](https://creativecommons.org/publicdomain/zero/1.0/) | - |
