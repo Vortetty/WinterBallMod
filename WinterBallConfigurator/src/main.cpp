@@ -88,11 +88,11 @@ struct drawableListEntry {
 };
 
 char* get_homedir(void) {
-    char homedir[512];
+    char homedir[512] = "";
 #ifdef _WIN32
     snprintf(homedir, 512, "%s%s", getenv("HOMEDRIVE"), getenv("HOMEPATH"));
 #else
-    snprintf(homedir, 512, "%s", getenv("HOME"));
+    //snprintf(homedir, 512, "%s", getenv("HOME"));
 #endif
     return strdup(homedir);
 }
@@ -187,6 +187,8 @@ inline void addComboBox(Vec2 pos, char const *label, char *description, const ch
 }
 
 int main(int argc, char* argv[]) {
+    bool eaaea = saveDrawableToFile("testImage.png", "?setcolor=fff?replace;fff0=fff?crop;0;0;2;2?blendmult=/items/active/weapons/protectorate/aegisaltpistol/beamend.png;0;0?replace;a355c0a5=00010000;a355c07b=06010000;ffffffa5=00010600;ffffff7b=06010600?scale=7;7?crop;1;1;8;8?replace;00010200=642f00;00010300=e359b9;00010400=36261e;01010100=642f00;01010200=a46e06;01010300=ff99e6;01010400=513a2d;01010500=36261e;02010000=642f00;02010100=a46e06;02010200=a46e06;02010300=feffff;02010400=513a2d;02010500=714f3c;02010600=513a2d;03010000=642f00;03010100=a46e06;03010200=a46e06;03010300=feffff;03010400=513a2d;03010500=714f3c;03010600=513a2d;04010000=642f00;04010100=a46e06;04010200=a46e06;04010300=feffff;04010400=714f3c;04010500=976750;04010600=513a2d;05010100=642f00;05010200=a46e06;05010300=ff99e6;05010400=976750;05010500=513a2d;06010200=a46e06;06010300=e359b9;06010400=513a2d");
+
     InitWindow(800, 600, "WinterBall Tech Config Generator");
 
     //GuiLoadStyle("assets/dark+pink.rgs");
@@ -215,8 +217,9 @@ int main(int argc, char* argv[]) {
     Rectangle frameScrollerContentRec = frameScrollerRec;
     frameScrollerContentRec.width -= 5;
     Vec2 frameScrollerPos = {0, 0};
-    char const * acceptableFiletypes[] = { "*.bmp", "*.png", "*.tga", "*.jpg", "*.gif", "*.psd", "*.pic", "*.hdr", "*.dds", "*.pkm", "*.ktx", "*.pvr", "*.astc", "*.BMP", "*.PNG", "*.TGA", "*.JPG", "*.GIF", "*.PSD", "*.PIC", "*.HDR", "*.DDS", "*.PKM", "*.KTX", "*.PVR", "*.ASTC" };
-    char const * acceptableAnimFiletypes[] = { "*.gif", "*.GIF" };
+    char const *acceptableFiletypes[] = { "*.bmp", "*.png", "*.tga", "*.jpg", "*.psd", "*.pic", "*.hdr", "*.dds", "*.pkm", "*.ktx", "*.pvr", "*.astc", "*.BMP", "*.PNG", "*.TGA", "*.JPG", "*.PSD", "*.PIC", "*.HDR", "*.DDS", "*.PKM", "*.KTX", "*.PVR", "*.ASTC" };
+    char const *acceptableAnimFiletypes[] = { "*.gif", "*.GIF" };
+    char const *acceptableConfigFiletypes[] = { "*.jsonc" };
     bool SaveGUIEnabled = false;
     bool flashInvalidPaths = false;
     bool invalidPathsExist = false;
@@ -273,7 +276,7 @@ int main(int argc, char* argv[]) {
                 //
                 // Save button
                 //
-                    if (GuiButton({5, 575, 435, 20}, GuiIconText(RICON_FILE_SAVE, "Save config"))) {
+                    if (GuiButton({5, 575, 215, 20}, GuiIconText(RICON_FILE_SAVE, "Save config"))) {
                         bool invalidPath = false;
                         for (int i = 0; i < frameCount; i++) {
                             if (!std::filesystem::exists(drawableList[i].path)) invalidPath = true;
@@ -282,6 +285,52 @@ int main(int argc, char* argv[]) {
                             flashInvalidPaths = true;
                         } else {
                             SaveGUIEnabled = true;
+                        }
+                    }
+
+                //
+                // Load button
+                //
+                    if (GuiButton({225, 575, 215, 20}, GuiIconText(RICON_FILE_OPEN, "Load config"))) {
+                        char path[512];
+                        callChoosePathGui(TextFormat("Select image to load from"), acceptableConfigFiletypes, 1, "GIF Files", path);
+
+                        if (std::filesystem::exists(path) && !std::filesystem::is_directory(path)) {
+                            std::cout << "Loading config from " << path << std::endl;
+
+                            json j;
+                            std::ifstream i(path);
+                            j = json::parse(i, nullptr, true, true);
+
+                            // j["frameCount"] = frameCount;
+                            // j["scale"] = ballScale;
+                            // j["allowInterract"] = allowInterract;
+                            // j["animationSpeedDivisor"] = animSpeedDivisor;
+                            // j["drawables"] = json::array();
+                            // 
+                            // for (int i = 0; i < frameCount; i++) {
+                            //     j["drawables"].push_back(generateDirectives(drawableList[i].path, 7*ballScale, (scalingMethod)scaleMethodSelection));
+                            // }
+
+                            fs::remove_all("gifLoaderTempFiles");
+                            fs::create_directory("gifLoaderTempFiles");
+
+                            frameCount = j.value("frameCount", 0);
+                            frameCountBuf = frameCount;
+
+                            ballScale = j.value("scale", 1);
+                            ballScaleBuf = ballScale;
+
+                            allowInterract = j.value("allowInterract", false);
+
+                            animSpeedDivisor = j.value("animationSpeedDivisor", 1);
+                            animSpeedDivisorBuf = animSpeedDivisor;
+
+                            drawableList.resize(frameCount);
+                            for (int i = 0; i < frameCount; i++) {
+                                saveDrawableToFile(TextFormat("gifLoaderTempFiles/frame_%i.png", i), j["drawables"][i]);
+                                strcpy(drawableList[i].path, TextFormat("gifLoaderTempFiles/frame_%i.png", i));
+                            }
                         }
                     }
 
@@ -349,7 +398,7 @@ int main(int argc, char* argv[]) {
                                 GuiLabel({450, i * 76 + 9 + frameScrollerPos.y, 300, 10}, TextFormat("Frame %d image path:", i+1));
                             }
                             if (GuiButton({450, i * 76 + 20 + frameScrollerPos.y, 20, 60}, GuiIconText(RICON_FILE_OPEN, ""))) {
-                                callChoosePathGui(TextFormat("Select image for frame %d", i+1), acceptableFiletypes, 26, "Image files", drawableList[i].path);
+                                callChoosePathGui(TextFormat("Select image for frame %d", i+1), acceptableFiletypes, 24, "Image files", drawableList[i].path);
                             }
                             // I disabled the extended text box because it's not working properly
                             //if (GuiTextBoxEx({475, i * 76 + 20 + frameScrollerPos.y, 290, 30}, drawableList[i].path, 512, drawableList[i].beingEdited)) 
@@ -414,6 +463,8 @@ int main(int argc, char* argv[]) {
                 }
         EndDrawing();
     }
+
+    fs::remove_all("gifLoaderTempFiles");
 
     CloseWindow();
 

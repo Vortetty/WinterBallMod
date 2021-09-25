@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <filesystem>
+#include <bits/stringfwd.h>
 namespace fs = std::filesystem;
 
 #ifdef _WIN32
@@ -13,9 +14,9 @@ std::string getTempName() {
 }
 #else
 std::string getTempName() {
-	char name[] = "winterball_theme_loader_XXXXXX";
-	mkstemp(name);
-	return std::string(name);
+	std::string name = "winterball_theme_loader_XXXXXX";
+	int fd = mkstemp((char*)name.c_str());
+	return fs::read_symlink("/proc/self/fd/" + std::to_string(fd)).string();
 }
 #endif
 
@@ -44,7 +45,7 @@ std::string theme =
 "p 12 11 0x8a8a8aff    LISTVIEW_TEXT_COLOR_DISABLED            \n";
 
 void applyTheme() {
-	const char* tmpPath = (const char*)(fs::temp_directory_path()/getTempName()).c_str();
+	std::string tmpPath = getTempName();
 
 	//FILE* f = fopen(tmpPath, "wb");
 	//fwrite(theme, sizeof(char), sizeof(theme), f);
@@ -54,7 +55,7 @@ void applyTheme() {
 	f << theme;
 	f.close();
 
-	GuiLoadStyle(tmpPath);
+	GuiLoadStyle(tmpPath.c_str());
 
-	fs::remove(tmpPath);
+	while (remove(tmpPath.c_str()) != 0);
 }

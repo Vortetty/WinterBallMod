@@ -48,7 +48,7 @@ GDB_OPTS =
 # Linux
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-.PHONY: build run test gdb clean
+.PHONY: build run gdb clean
 
 build: $(OBJ_FILES)
 	clang++ -std=c++20 -o bin/ballConfigGenerator $(OBJ_FILES) $(INCLUDE_DIRS) $(LINK_LIBRARIES) -pthreads -O3 $(IGNORE_ISO) $(POLLY_OPTS)
@@ -72,7 +72,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo $(C_SRC_FILES)
 	@echo $(CXX_SRC_FILES)
 	@echo $(OBJ_FILES)
-	clang -std=c99 -c -o $@ $< $(INCLUDE_DIRS) -O3 $(IGNORE_ISO) -fPIC -D_DEFAULT_SOURCE -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 $(POLLY_OPTS) $(GLFW_DEFINES) $(GDB_OPTS)
+	clang -std=c99 -c -o $@ $< $(INCLUDE_DIRS) -pthreads -O3 $(IGNORE_ISO) -fPIC -D_DEFAULT_SOURCE -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 $(POLLY_OPTS) $(GLFW_DEFINES) $(GDB_OPTS)
 
 clean:
 	rm -rf bin

@@ -113,6 +113,7 @@
     <ClInclude Include="include\raylib.h" />
     <ClInclude Include="include\theme.hpp" />
     <ClInclude Include="include\tinyfiledialogs.h" />
+    <ClInclude Include="include\pystring.hpp" />
     <ClInclude Include="src\drawableHelper.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -120,10 +121,9 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\theme.cpp" />
     <ClCompile Include="src\tinyfiledialogs.c" />
+    <ClCompile Include="src\pystring.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\dark+pink.rgs" />
-    <None Include="bin\assets\dark+pink.rgs" />
     <None Include="makefile" />
   </ItemGroup>
   <ItemGroup>

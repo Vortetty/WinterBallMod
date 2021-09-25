@@ -1,6 +1,9 @@
 # Configurator
 
-A simple configuration genertor for the mod, can't load or modify settings yet, just generate them (i am working on figuring out how to load drawables to images manually and cache them).
+A simple configuration genertor for the mod, it is also able to load and edit a config file.
+
+- If you want to edit any of the images from a loaded config or gif you can edit `gifLoaderTempFiles/frame_<number>.png`.
+- `gifLoaderTempFiles` is in the same folder you the program from.
 
 ## Compiling
 
