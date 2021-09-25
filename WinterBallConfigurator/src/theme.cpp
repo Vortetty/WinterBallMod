@@ -1,10 +1,25 @@
 #include "raygui.h"
 #include "gui_textbox_extended.h"
 #include <cstdio>
+#include <fstream>
+#include <string>
+#include <iostream>
 #include <filesystem>
 namespace fs = std::filesystem;
 
-const char theme[] =
+#ifdef _WIN32
+std::string getTempName() {
+	return tmpnam(nullptr);
+}
+#else
+std::string getTempName() {
+	char name[] = "winterball_theme_loader_XXXXXX";
+	mkstemp(name);
+	return std::string(name);
+}
+#endif
+
+std::string theme =
 "#                                                             \n"
 "# Colors generated on https://materialpalettes.com/ using:    \n"
 "#   Primary color - #FFD3DC                                   \n"
@@ -29,11 +44,15 @@ const char theme[] =
 "p 12 11 0x8a8a8aff    LISTVIEW_TEXT_COLOR_DISABLED            \n";
 
 void applyTheme() {
-	const char* tmpPath = (const char*)(fs::temp_directory_path()/tmpnam(nullptr)).c_str();
+	const char* tmpPath = (const char*)(fs::temp_directory_path()/getTempName()).c_str();
 
-	FILE* f = fopen(tmpPath, "wb");
-	fwrite(theme, sizeof(char), sizeof(theme), f);
-	fclose(f);
+	//FILE* f = fopen(tmpPath, "wb");
+	//fwrite(theme, sizeof(char), sizeof(theme), f);
+	//fclose(f);
+
+	std::ofstream f(tmpPath);
+	f << theme;
+	f.close();
 
 	GuiLoadStyle(tmpPath);
 
