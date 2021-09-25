@@ -4,8 +4,8 @@
 #pragma warning( push, 0 )
 #pragma warning( disable : 4576 )
 #pragma warning( disable : 2290 )
-//#include "hideConsole.hpp"
-//bool consoleHidden = hideConsole();
+#include "hideConsole.hpp"
+bool consoleHidden = hideConsole();
 #endif
 
 #define RAYGUI_IMPLEMENTATION
