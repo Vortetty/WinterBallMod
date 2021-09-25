@@ -2,7 +2,7 @@
   "version" : "1.0.0",
   "author" : "Vortetty (AKA Winter or Tæmt modʒiɹæ)",
   "requires" : [],
-  "description" : "Incompatible with other distortion ball tech mods.",
+  "description" : "Incompatible with other distortion ball tech mods. F + [SPACE] to ",
   "name" : "WinterBallTech",
   "path" : ".",
   "friendlyName" : "WinterBall Tech",
