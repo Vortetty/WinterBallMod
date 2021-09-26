@@ -35,3 +35,6 @@ Unsupported platforms:
 - Other platforms
   - If you want to see another platform, feel free to make a PR
 
+## Bugs?
+
+This is primarily developed on linux, you can open bug reports for any supported os but non-linux fixes may take longer, especially for platforms i have no way to fix.
