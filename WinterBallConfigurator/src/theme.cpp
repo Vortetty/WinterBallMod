@@ -5,7 +5,6 @@
 #include <string>
 #include <iostream>
 #include <filesystem>
-#include <bits/stringfwd.h>
 namespace fs = std::filesystem;
 
 #ifdef _WIN32
