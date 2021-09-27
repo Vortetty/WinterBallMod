@@ -307,7 +307,7 @@ int main(int argc, char* argv[]) {
                             // j["drawables"] = json::array();
                             // 
                             // for (int i = 0; i < frameCount; i++) {
-                            //     j["drawables"].push_back(generateDirectives(drawableList[i].path, 7*ballScale, (scalingMethod)scaleMethodSelection));
+                            //     j["drawables"].push_back(generateDirectives(drawableList[i].path, 8*ballScale-1, (scalingMethod)scaleMethodSelection));
                             // }
 
                             fs::remove_all("gifLoaderTempFiles");
@@ -377,7 +377,7 @@ int main(int argc, char* argv[]) {
                 // Frame list
                 //
                     GuiDrawRectangle({445, 554, 350, 15}, 1, Fade(GetColor(GuiGetStyle(SCROLLBAR, BORDER_COLOR_NORMAL)), guiAlpha), Fade(GetColor(GuiGetStyle(SCROLLBAR, BASE_COLOR_NORMAL)), guiAlpha));
-                    GuiLabel({450, 557, 325, 10}, TextFormat("Frames should be %dx%dpx | %s", 7*ballScale, 7*ballScale, (invalidPathsExist ? "Some paths are invalid" : "All paths are valid")));
+                    GuiLabel({450, 557, 325, 10}, TextFormat("Frames should be %dx%dpx | %s", 8*ballScale-1, 8*ballScale-1, (invalidPathsExist ? "Some paths are invalid" : "All paths are valid")));
 
                     Rectangle view = GuiScrollPanel(frameScrollerRec, frameScrollerContentRec, &frameScrollerPos);
                     BeginScissorMode(view.x, view.y, view.width, view.height);
@@ -448,7 +448,7 @@ int main(int argc, char* argv[]) {
                         j["drawables"] = json::array();
                         
                         for (int i = 0; i < frameCount; i++) {
-                            j["drawables"].push_back(generateDirectives(drawableList[i].path, 7*ballScale, (scalingMethod)scaleMethodSelection));
+                            j["drawables"].push_back(generateDirectives(drawableList[i].path, 8*ballScale-1, (scalingMethod)scaleMethodSelection));
                         }
 
                         std::ofstream jsonOut;

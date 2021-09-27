@@ -130,6 +130,14 @@ function init()
     end
 end
 
+function addIfNegElseSub(v, toAdd)
+    if v < 0 then
+        return v + toAdd
+    else
+        return v - toAdd
+    end
+end
+
 function loadConfigJson() -- Loads the config.json file
     self.ballConfigJson = root.assetJson("/tech/distortionsphere/config.jsonc")
     self.ballFrames = self.ballConfigJson["drawables"]
@@ -138,6 +146,11 @@ function loadConfigJson() -- Loads the config.json file
     self.ballFrameCount = self.ballConfigJson["frameCount"]
     self.allowInterractWhileInBall = self.ballConfigJson["allowInterract"]
     self.animationSpeedDivisor = self.ballConfigJson["animationSpeedDivisor"] or 1
+
+    for i, x in ipairs(self.transformedMovementParameters.collisionPoly) do
+        self.transformedMovementParameters.collisionPoly[i][1] = addIfNegElseSub(self.transformedMovementParameters.collisionPoly[i][1]*self.ballScale, 0.0625)
+        self.transformedMovementParameters.collisionPoly[i][2] = addIfNegElseSub(self.transformedMovementParameters.collisionPoly[i][2]*self.ballScale, 0.0625)
+    end
 end
 
 function initCommonParameters()
@@ -149,24 +162,13 @@ function initCommonParameters()
     self.energyCost = config.getParameter("energyCost")
     --self.ballFrames = config.getParameter("ballFrames")
     self.ballSpeed = config.getParameter("ballSpeed")
-
-    loadConfigJson()
-
     self.transformFadeTime = config.getParameter("transformFadeTime", 0.3)
     self.transformedMovementParameters = config.getParameter("transformedMovementParameters")
     self.transformedMovementParameters.runSpeed = self.ballSpeed
     self.transformedMovementParameters.walkSpeed = self.ballSpeed
-    self.transformedMovementParameters.collisionPoly = { 
-        {-0.425*self.ballScale, -0.225*self.ballScale}, 
-        {-0.225*self.ballScale, -0.425*self.ballScale}, 
-        {0.225*self.ballScale, -0.425*self.ballScale}, 
-        {0.425*self.ballScale, -0.225*self.ballScale}, 
-        {0.425*self.ballScale, 0.225*self.ballScale}, 
-        {0.225*self.ballScale, 0.425*self.ballScale}, 
-        {-0.225*self.ballScale, 0.425*self.ballScale}, 
-        {-0.425*self.ballScale, 0.225*self.ballScale} 
-    }
     self.basePoly = mcontroller.baseParameters().standingPoly
+
+    loadConfigJson()
 end
 
 
