@@ -1,8 +1,12 @@
 SRC_DIR := src
 OBJ_DIR := src
 C_SRC_FILES := $(filter-out src/raylib/src/external,$(shell find $(SRC_DIR)/ -path src/raylib/src/external -prune -o -type f -name '*.c'))
-CXX_SRC_FILES := $(filter-out src/raylib/src/external,$(shell find $(SRC_DIR)/ -path src/raylib/src/external -prune -o -type f -name '*.cpp') $(shell find $(SRC_DIR)/ -path src/raylib/src/external -prune -o -type f -name '*.cc'))
-OBJ_FILES := $(patsubst $(SRC_DIR)/%.cc,$(OBJ_DIR)/%.o,$(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(CXX_SRC_FILES))) $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(C_SRC_FILES))
+CC_SRC_FILES := $(filter-out src/raylib/src/external,$(shell find $(SRC_DIR)/ -path src/raylib/src/external -prune -o -type f -name '*.cc'))
+CPP_SRC_FILES := $(filter-out src/raylib/src/external,$(shell find $(SRC_DIR)/ -path src/raylib/src/external -prune -o -type f -name '*.cpp'))
+C_OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(C_SRC_FILES))
+CC_OBJ_FILES := $(patsubst $(SRC_DIR)/%.cc,$(OBJ_DIR)/%.o,$(CC_SRC_FILES))
+CPP_OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(CPP_SRC_FILES))
+OBJ_FILES := $(C_OBJ_FILES) $(CC_OBJ_FILES) $(CPP_OBJ_FILES)
 
 INCLUDE_DIRS = -Iinclude \
 				-Isrc/raylib/src \
@@ -65,14 +69,12 @@ gdb: setGdbOpts $(OBJ_FILES)
 setGdbOpts:
 	$(eval GDB_OPTS := -g)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+$(C_OBJ_FILES): %.o: %.c
+$(CC_OBJ_FILES): %.o: %.cc
+$(CPP_OBJ_FILES): %.o: %.cpp
+$(OBJ_FILES):
 	clang++ -std=c++20 -c -o $@ $< $(INCLUDE_DIRS) -pthreads -O3 $(IGNORE_ISO) -fPIC -D_DEFAULT_SOURCE -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 $(POLLY_OPTS) $(GLFW_DEFINES) $(GDB_OPTS)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@echo $(C_SRC_FILES)
-	@echo $(CXX_SRC_FILES)
-	@echo $(OBJ_FILES)
-	clang -std=c99 -c -o $@ $< $(INCLUDE_DIRS) -pthreads -O3 $(IGNORE_ISO) -fPIC -D_DEFAULT_SOURCE -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 $(POLLY_OPTS) $(GLFW_DEFINES) $(GDB_OPTS)
 
 clean:
 	rm -rf bin
