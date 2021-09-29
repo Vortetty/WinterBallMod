@@ -39,7 +39,7 @@
     <ClInclude Include="include\theme.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pystring\theme.hpp">
+    <ClInclude Include="include\pystring.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,14 +59,11 @@
     <ClCompile Include="src\pystring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\drawableHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="makefile" />
-    <None Include="assets\dark+pink.rgs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="bin\assets\dark+pink.rgs">
-      <Filter>Resource Files</Filter>
-    </None>
   </ItemGroup>
 </Project>
