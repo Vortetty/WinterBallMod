@@ -211,9 +211,9 @@ int main(int argc, char* argv[]) {
 
     int scaleMethodSelection = 0;
 
-    Rectangle frameScrollerRec = {445, 5, 350, 550};
+    Rectangle frameScrollerRec = {445, 5, 350, 545};
     Rectangle frameScrollerContentRec = frameScrollerRec;
-    frameScrollerContentRec.width -= 5;
+    frameScrollerContentRec.width -= 20;
     Vec2 frameScrollerPos = {0, 0};
     char const *acceptableFiletypes[] = { "*.bmp", "*.png", "*.tga", "*.jpg", "*.psd", "*.pic", "*.hdr", "*.dds", "*.pkm", "*.ktx", "*.pvr", "*.astc", "*.BMP", "*.PNG", "*.TGA", "*.JPG", "*.PSD", "*.PIC", "*.HDR", "*.DDS", "*.PKM", "*.KTX", "*.PVR", "*.ASTC" };
     char const *acceptableAnimFiletypes[] = { "*.gif", "*.GIF" };
@@ -376,18 +376,16 @@ int main(int argc, char* argv[]) {
                 //
                 // Frame list
                 //
-                    GuiDrawRectangle({445, 554, 350, 15}, 1, Fade(GetColor(GuiGetStyle(SCROLLBAR, BORDER_COLOR_NORMAL)), guiAlpha), Fade(GetColor(GuiGetStyle(SCROLLBAR, BASE_COLOR_NORMAL)), guiAlpha));
-                    GuiLabel({450, 557, 325, 10}, TextFormat("Frames should be %dx%dpx | %s", 8*ballScale-1, 8*ballScale-1, (invalidPathsExist ? "Some paths are invalid" : "All paths are valid")));
-
                     Rectangle view = GuiScrollPanel(frameScrollerRec, frameScrollerContentRec, &frameScrollerPos);
                     BeginScissorMode(view.x, view.y, view.width, view.height);
                         invalidPathsExist = false;
-                        for (int i = 0; i < frameCount; i++) {
+                        //for (int i = 0; i < frameCount; i++) {
+                        for (int i = (int)std::fmax(0, (frameScrollerPos.y*-1)/76); i < std::fmin(0, (frameScrollerPos.y*-1)/76) + (int)std::fmin(frameCount, ((frameScrollerPos.y*-1) + view.height)/76 + 2); i++) {
                             try {
                                 if (!std::filesystem::exists(drawableList[i].path) || std::filesystem::is_directory(drawableList[i].path)) {
                                     invalidPathsExist = true;
                                     if (flashInvalidPaths) { GuiDisable(); GuiLock(); }
-                                    GuiDrawText(TextFormat("Frame %d image path (%s path):", i+1, strcmp(drawableList[i].path, dummyPath) ? "invalid" : "empty"), GetTextBounds(LABEL, {450, i * 35 + 9 + frameScrollerPos.y, 300, 10}), GuiGetStyle(LABEL, TEXT_ALIGNMENT), Fade({0xff, 0x4b, 0x54, 0xff}, guiAlpha));
+                                    GuiDrawText(TextFormat("Frame %d image path (%s path):", i+1, strcmp(drawableList[i].path, dummyPath) ? "invalid" : "empty"), GetTextBounds(LABEL, {450, i * 76 + 9 + frameScrollerPos.y, 300, 10}), GuiGetStyle(LABEL, TEXT_ALIGNMENT), Fade({0xff, 0x4b, 0x54, 0xff}, guiAlpha));
                                     if (flashInvalidPaths) { GuiEnable(); GuiUnlock(); }
                                 } else {
                                     GuiLabel({450, i * 76 + 9 + frameScrollerPos.y, 300, 10}, TextFormat("Frame %d image path:", i+1));
@@ -415,6 +413,10 @@ int main(int argc, char* argv[]) {
                         GuiEnable();
                         GuiUnlock();
                     }
+
+                    GuiDrawRectangle({445, 554, 350, 15}, 1, Fade(GetColor(GuiGetStyle(SCROLLBAR, BORDER_COLOR_NORMAL)), guiAlpha), Fade(GetColor(GuiGetStyle(SCROLLBAR, BASE_COLOR_NORMAL)), guiAlpha));
+                    
+                    GuiLabel({450, 557, 325, 10}, TextFormat("Frames should be %dx%dpx | %i Frame%s | %s | %i FPS", 8*ballScale-1, 8*ballScale-1, frameCount, (frameCount==1 ? "" : "s"), (invalidPathsExist ? "Some are invalid" : "All are valid"), GetFPS()));
                 } else {
                     DrawText("Saving config", 800/2-(MeasureText("Saving config", 40)/2), 600/2-40, 40, GetColor(GuiGetStyle(LABEL, TEXT)));
 

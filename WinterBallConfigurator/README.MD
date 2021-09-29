@@ -14,8 +14,8 @@ Supported platforms:
   - To compile then run, run `make test`
   - To compile then run in gdb, run `make gdb`
   - To compile then run the latest build, run `make run`
-  - If your installation of clang supports polly(if you didn't explicitly compile clang with it, it probably doesn't), you can use `make <command> polly=true` to enable it's optimizations while building
-  - The current libraylib.a is x86, i will add an arm version when i get my pi working
+  - If your installation of clang supports polly it is automatically enabled, if it does not support it you can disable polly with `make <command> polly=false`
+  - Raylib will be compiled once then only needs recompiled after a `make clean`
 - Windows using Visual studio (all architectures with VS support)
   - Simple, just open the .sln and click build
 

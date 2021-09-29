@@ -22,8 +22,10 @@ LINK_LIBRARIES = -L/usr/lib -Llib -ldl
 IGNORE_ISO_STANDARD = -Wno-writable-strings -Wno-missing-braces -Werror=pointer-arith -fno-strict-aliasing
 
 POLLY_OPTS =
-ifdef polly
-	POLLY_OPTS = -mllvm -polly
+ifndef polly
+	POLLY_OPTS = -mllvm -polly \
+				-mllvm -polly-parallel -lgomp \
+				-mllvm -polly-vectorizer=stripmine
 endif
 
 GLFW_DEFINES = 
@@ -55,7 +57,7 @@ ifeq ($(UNAME_S),Linux)
 .PHONY: build run gdb clean
 
 build: $(OBJ_FILES)
-	clang++ -std=c++20 -o bin/ballConfigGenerator $(OBJ_FILES) $(INCLUDE_DIRS) $(LINK_LIBRARIES) -pthreads -O3 $(IGNORE_ISO) $(POLLY_OPTS)
+	clang++ -std=c++20 -o bin/ballConfigGenerator $(OBJ_FILES) $(INCLUDE_DIRS) $(LINK_LIBRARIES) -pthreads -O3 $(IGNORE_ISO) $(POLLY_OPTS) -Wl,-s
 
 run:
 	./bin/ballConfigGenerator
@@ -63,17 +65,20 @@ run:
 test: build run
 
 gdb: setGdbOpts $(OBJ_FILES)
-	clang++ -std=c++20 -o bin/ballConfigGenerator $(OBJ_FILES) $(INCLUDE_DIRS) $(LINK_LIBRARIES) -pthreads -O3 $(IGNORE_ISO) $(POLLY_OPTS) -g
+	clang++ -std=c++20 -o bin/ballConfigGenerator $(OBJ_FILES) $(INCLUDE_DIRS) $(LINK_LIBRARIES) -pthreads -O3 $(IGNORE_ISO) $(POLLY_OPTS) -Wl,-s -g
 	gdb -ex run bin/ballConfigGenerator
 
 setGdbOpts:
 	$(eval GDB_OPTS := -g)
 
 $(C_OBJ_FILES): %.o: %.c
+	clang -std=c99 -c -o $@ $< $(INCLUDE_DIRS) -pthreads -O3 $(IGNORE_ISO) -fPIC -D_DEFAULT_SOURCE -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 $(POLLY_OPTS) $(GLFW_DEFINES) $(GDB_OPTS)
 $(CC_OBJ_FILES): %.o: %.cc
-$(CPP_OBJ_FILES): %.o: %.cpp
-$(OBJ_FILES):
 	clang++ -std=c++20 -c -o $@ $< $(INCLUDE_DIRS) -pthreads -O3 $(IGNORE_ISO) -fPIC -D_DEFAULT_SOURCE -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 $(POLLY_OPTS) $(GLFW_DEFINES) $(GDB_OPTS)
+$(CPP_OBJ_FILES): %.o: %.cpp
+	clang++ -std=c++20 -c -o $@ $< $(INCLUDE_DIRS) -pthreads -O3 $(IGNORE_ISO) -fPIC -D_DEFAULT_SOURCE -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 $(POLLY_OPTS) $(GLFW_DEFINES) $(GDB_OPTS)
+#$(OBJ_FILES):
+#	clang++ -std=c++20 -c -o $@ $< $(INCLUDE_DIRS) -pthreads -O3 $(IGNORE_ISO) -fPIC -D_DEFAULT_SOURCE -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 $(POLLY_OPTS) $(GLFW_DEFINES) $(GDB_OPTS)
 
 
 clean:
