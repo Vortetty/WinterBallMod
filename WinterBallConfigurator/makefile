@@ -8,21 +8,15 @@ CC_OBJ_FILES := $(patsubst $(SRC_DIR)/%.cc,$(OBJ_DIR)/%.o,$(CC_SRC_FILES))
 CPP_OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(CPP_SRC_FILES))
 OBJ_FILES := $(C_OBJ_FILES) $(CC_OBJ_FILES) $(CPP_OBJ_FILES)
 
-INCLUDE_DIRS = -Iinclude \
-				-Isrc/raylib/src \
-				-Isrc/raylib/extras \
-				-Isrc/raylib/src/external/glfw \
-				-Isrc/raylib/src/external/glfw/include \
-				-Isrc/raylib/src/external/glfw/include/GLFW \
-				-Isrc/raylib/src/external/glfw/deps \
-				-Isrc/raylib/src/external/glfw/deps/glad \
-				-Isrc/raylib/src/external/glfw/deps/mingw \
-				-Isrc/raylib/src/external/glfw/src/
+# Filtered external since it contains dirent.h, which is a windows header.
+INCLUDE_FILTER = -Isrc/raylib/src/external/
+INCLUDE_DIRS = $(filter-out $(INCLUDE_FILTER),$(addprefix -I,$(sort $(dir $(shell find src/ -type d)))) $(addprefix -I,$(sort $(dir $(shell find include/ -type d)))))
 LINK_LIBRARIES = -L/usr/lib -Llib -ldl
 IGNORE_ISO_STANDARD = -Wno-writable-strings -Wno-missing-braces -Werror=pointer-arith -fno-strict-aliasing
 
+pollySupported = $(shell clang polly_support_test/polly_tester.cpp -o /dev/null -mllvm -polly -mllvm -polly-parallel -lgomp -mllvm -polly-vectorizer=stripmine)
 POLLY_OPTS =
-ifndef polly
+ifeq ($(.SHELLSTATUS),0)
 	POLLY_OPTS = -mllvm -polly \
 				-mllvm -polly-parallel -lgomp \
 				-mllvm -polly-vectorizer=stripmine
