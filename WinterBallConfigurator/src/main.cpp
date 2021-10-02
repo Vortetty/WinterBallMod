@@ -415,8 +415,9 @@ int main(int argc, char* argv[]) {
                     }
 
                     GuiDrawRectangle({445, 554, 350, 15}, 1, Fade(GetColor(GuiGetStyle(SCROLLBAR, BORDER_COLOR_NORMAL)), guiAlpha), Fade(GetColor(GuiGetStyle(SCROLLBAR, BASE_COLOR_NORMAL)), guiAlpha));
-                    
-                    GuiLabel({450, 557, 325, 10}, TextFormat("Frames should be %dx%dpx | %i Frame%s | %s | %i FPS", 8*ballScale-1, 8*ballScale-1, frameCount, (frameCount==1 ? "" : "s"), (invalidPathsExist ? "Some are invalid" : "All are valid"), GetFPS()));
+                    const char* c = TextFormat("Frames should be %dx%dpx | %i Frame%s | %s | %i FPS", 8*ballScale-1, 8*ballScale-1, frameCount, (frameCount==1 ? "" : "s"), (invalidPathsExist ? "Some are invalid" : "All are valid"), GetFPS());
+                    float cwidth = (float)GetTextWidth(c);
+                    GuiLabel({445 + std::floor(175 - cwidth/2), 557, cwidth, 10}, TextFormat("Frames should be %dx%dpx | %i Frame%s | %s | %i FPS", 8*ballScale-1, 8*ballScale-1, frameCount, (frameCount==1 ? "" : "s"), (invalidPathsExist ? "Some are invalid" : "All are valid"), GetFPS()));
                 } else {
                     DrawText("Saving config", 800/2-(MeasureText("Saving config", 40)/2), 600/2-40, 40, GetColor(GuiGetStyle(LABEL, TEXT)));
 
