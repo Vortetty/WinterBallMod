@@ -87,3 +87,8 @@ endif
 ifeq ($(UNAME_S),Darwin)
 	@echo "Unsupported operating system due to my lack of mac devices, feel free to make a pr with a working build system"
 endif
+
+# windows
+ifeq ($(UNAME_S),Windows_NT)
+	@echo "Unsupported operating system due to:\n\"fuck that dll hell\" - Winter 2021"
+endif
