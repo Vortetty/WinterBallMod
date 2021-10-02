@@ -14,8 +14,9 @@ Supported platforms:
   - To compile then run, run `make test`
   - To compile then run in gdb, run `make gdb`
   - To compile then run the latest build, run `make run`
-  - Makefile attempts to detect if your clang install has support for polygonal optimizations, if it isn't supported or some other error occurs it will not be enabled.
   - Raylib will be compiled once then only needs recompiled after a `make clean`
+  - Makefile attempts to detect if your clang install has support for polygonal optimizations, if it isn't supported or some other error occurs it will not be enabled.
+  - Makefile automatically parallelizes the build process as it can be slow otherwise.
 - Windows using Visual studio (all architectures with VS support)
   - Simple, just open the .sln and click build
 

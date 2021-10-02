@@ -1,84 +1,22 @@
-SRC_DIR := src
-OBJ_DIR := src
-C_SRC_FILES := $(filter-out src/raylib/src/external,$(shell find $(SRC_DIR)/ -path src/raylib/src/external -prune -o -type f -name '*.c'))
-CC_SRC_FILES := $(filter-out src/raylib/src/external,$(shell find $(SRC_DIR)/ -path src/raylib/src/external -prune -o -type f -name '*.cc'))
-CPP_SRC_FILES := $(filter-out src/raylib/src/external,$(shell find $(SRC_DIR)/ -path src/raylib/src/external -prune -o -type f -name '*.cpp'))
-C_OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(C_SRC_FILES))
-CC_OBJ_FILES := $(patsubst $(SRC_DIR)/%.cc,$(OBJ_DIR)/%.o,$(CC_SRC_FILES))
-CPP_OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(CPP_SRC_FILES))
-OBJ_FILES := $(C_OBJ_FILES) $(CC_OBJ_FILES) $(CPP_OBJ_FILES)
-
-# Filtered external since it contains dirent.h, which is a windows header.
-INCLUDE_FILTER = -Isrc/raylib/src/external/
-INCLUDE_DIRS = $(filter-out $(INCLUDE_FILTER),$(addprefix -I,$(sort $(dir $(shell find src/ -type d)))) $(addprefix -I,$(sort $(dir $(shell find include/ -type d)))))
-LINK_LIBRARIES = -L/usr/lib -Llib -ldl
-IGNORE_ISO_STANDARD = -Wno-writable-strings -Wno-missing-braces -Werror=pointer-arith -fno-strict-aliasing
-
-pollySupported = $(shell clang polly_support_test/polly_tester.cpp -o /dev/null -mllvm -polly -mllvm -polly-parallel -lgomp -mllvm -polly-vectorizer=stripmine)
-POLLY_OPTS =
-ifeq ($(.SHELLSTATUS),0)
-	POLLY_OPTS = -mllvm -polly \
-				-mllvm -polly-parallel -lgomp \
-				-mllvm -polly-vectorizer=stripmine
-endif
-
-GLFW_DEFINES = 
-ifeq ($(OS),Windows_NT)
-	GLFW_DEFINES = -D_GLFW_WIN32=1
-else
-    UNAME_S := $(shell uname -s)
-    ifeq ($(UNAME_S),Linux)
-        GLFW_DEFINES = -D_GLFW_X11=1
-    endif
-    ifeq ($(UNAME_S),Darwin)
-        GLFW_DEFINES = -D_GLFW_COCOA=1
-    endif
-endif
-
-GDB_OPTS = 
-
-#  ____        _ _     _
-# |  _ \      (_) |   | |
-# | |_) |_   _ _| | __| |
-# |  _ <| | | | | |/ _` |
-# | |_) | |_| | | | (_| |
-# |____/ \__,_|_|_|\__,_|
-#
-
-# Linux
+CORES := $(shell nproc)
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 .PHONY: build run gdb clean
 
-build: $(OBJ_FILES)
-	clang++ -std=c++20 -o bin/ballConfigGenerator $(OBJ_FILES) $(INCLUDE_DIRS) $(LINK_LIBRARIES) -pthreads -O3 $(IGNORE_ISO) $(POLLY_OPTS) -Wl,-s
+build:
+	@make build -j$(CORES) -f makefile_real $@
 
 run:
-	./bin/ballConfigGenerator
+	@make run -j$(CORES) -f makefile_real $@
 
-test: build run
+test:
+	@make test -j$(CORES) -f makefile_real $@
 
-gdb: setGdbOpts $(OBJ_FILES)
-	clang++ -std=c++20 -o bin/ballConfigGenerator $(OBJ_FILES) $(INCLUDE_DIRS) $(LINK_LIBRARIES) -pthreads -O3 $(IGNORE_ISO) $(POLLY_OPTS) -Wl,-s -g
-	gdb -ex run bin/ballConfigGenerator
-
-setGdbOpts:
-	$(eval GDB_OPTS := -g)
-
-$(C_OBJ_FILES): %.o: %.c
-	clang -std=c99 -c -o $@ $< $(INCLUDE_DIRS) -pthreads -O3 $(IGNORE_ISO) -fPIC -D_DEFAULT_SOURCE -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 $(POLLY_OPTS) $(GLFW_DEFINES) $(GDB_OPTS)
-$(CC_OBJ_FILES): %.o: %.cc
-	clang++ -std=c++20 -c -o $@ $< $(INCLUDE_DIRS) -pthreads -O3 $(IGNORE_ISO) -fPIC -D_DEFAULT_SOURCE -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 $(POLLY_OPTS) $(GLFW_DEFINES) $(GDB_OPTS)
-$(CPP_OBJ_FILES): %.o: %.cpp
-	clang++ -std=c++20 -c -o $@ $< $(INCLUDE_DIRS) -pthreads -O3 $(IGNORE_ISO) -fPIC -D_DEFAULT_SOURCE -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 $(POLLY_OPTS) $(GLFW_DEFINES) $(GDB_OPTS)
-#$(OBJ_FILES):
-#	clang++ -std=c++20 -c -o $@ $< $(INCLUDE_DIRS) -pthreads -O3 $(IGNORE_ISO) -fPIC -D_DEFAULT_SOURCE -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 $(POLLY_OPTS) $(GLFW_DEFINES) $(GDB_OPTS)
-
+gdb:
+	@make gdb -j$(CORES) -f makefile_real $@
 
 clean:
-	rm -rf bin
-	mkdir bin
-	find . -type f -name '*.o' -delete
+	@make clean -j$(CORES) -f makefile_real $@
 
 endif
 
