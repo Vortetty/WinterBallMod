@@ -66,6 +66,22 @@ gdb: setGdbOpts $(OBJ_FILES)
 setGdbOpts:
 	$(eval GDB_OPTS := -g)
 
+install:
+ifeq ($(shell id -u),0)
+	-mkdir /opt
+	-rm -rf /opt/winterBallConfigGenerator
+	-rm -f /usr/share/applications/winterBallConfigGenerator.desktop
+	-mkdir /opt/winterBallConfigGenerator
+	cp -rf bin/. /opt/winterBallConfigGenerator/
+	cp -rf install_files/. /opt/winterBallConfigGenerator/
+	cp -f install_files/winterBallConfigGenerator.desktop /usr/share/applications/
+else
+	@echo -e "+-----------------------------------------+"
+	@echo -e "| \e[1;31mYou must be root to install the program\e[0m |"
+	@echo -e "+-----------------------------------------+"
+endif
+
+
 $(C_OBJ_FILES): %.o: %.c
 	clang -std=c99 -c -o $@ $< $(INCLUDE_DIRS) -pthreads -O3 $(IGNORE_ISO) -fPIC -D_DEFAULT_SOURCE -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 $(POLLY_OPTS) $(GLFW_DEFINES) $(GDB_OPTS)
 $(CC_OBJ_FILES): %.o: %.cc

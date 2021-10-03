@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Winterball Configurator
+Exec=/opt/winterBallConfigGenerator/ballConfigGenerator
+Icon=/opt/winterBallConfigGenerator/icon.ico
+Terminal=false
+Type=Application

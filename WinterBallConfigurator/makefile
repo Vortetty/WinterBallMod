@@ -18,6 +18,9 @@ gdb:
 clean:
 	@make clean -j$(CORES) -f makefile_real $@
 
+install:
+	@make install -j$(CORES) -f makefile_real $@
+
 endif
 
 # mac
